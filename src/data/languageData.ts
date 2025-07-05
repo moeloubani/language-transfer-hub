@@ -23,7 +23,12 @@ $first = $fruits[0];
 $fruits[] = "grape"; // Add to end`,
         targetCode: `const fruits = ["apple", "banana", "orange"];
 const first = fruits[0];
-fruits.push("grape"); // Add to end`
+fruits.push("grape"); // Add to end
+
+// Modern destructuring and spread
+const [firstFruit, secondFruit, ...restFruits] = fruits;
+const newFruits = [...fruits, "kiwi", "mango"];
+console.log(firstFruit, newFruits);`
       },
       {
         topic: 'Associative Arrays / Objects',
@@ -39,7 +44,13 @@ echo $person["name"];`,
   age: 30,
   city: "New York"
 };
-console.log(person.name);`
+
+// Traditional access
+console.log(person.name);
+
+// Modern destructuring
+const { name, age, city } = person;
+console.log(name, age, city);`
       },
       {
         topic: 'Functions',
@@ -50,12 +61,17 @@ console.log(person.name);`
 
 echo greet("John");
 echo greet("Jane", "Hi");`,
-        targetCode: `function greet(name, greeting = "Hello") {
+        targetCode: `// Traditional function
+function greet(name, greeting = "Hello") {
   return \`\${greeting}, \${name}!\`;
 }
 
+// Modern arrow function
+const greetArrow = (name, greeting = "Hello") => \`\${greeting}, \${name}!\`;
+
+// Usage
 console.log(greet("John"));
-console.log(greet("Jane", "Hi"));`
+console.log(greetArrow("Jane", "Hi"));`
       },
       {
         topic: 'Loops',
@@ -142,8 +158,14 @@ console.log(person.greet());`
         title: 'String Concatenation',
         description: 'PHP uses . for concatenation, JavaScript uses +',
         sourceExample: `$message = "Hello " . $name . "!";`,
-        targetExample: `const message = "Hello " + name + "!";`,
-        correctApproach: 'In JavaScript, use + for concatenation or template literals with backticks'
+        targetExample: `const message = "Hello " + name + "!";
+
+// Modern template literals (preferred)
+const betterMessage = \`Hello \${name}!\`;
+
+// With optional chaining for nested properties
+const greeting = \`Hello \${user?.profile?.name ?? 'Guest'}!\`;`,
+        correctApproach: 'Use template literals (\`\`) for cleaner string interpolation and optional chaining (?.) for safe property access'
       },
       {
         title: 'Variable Scope',
@@ -215,7 +237,12 @@ length = len(fruits)`,
         targetCode: `const fruits = ["apple", "banana", "orange"];
 const first = fruits[0];
 fruits.push("grape");
-const length = fruits.length;`
+const length = fruits.length;
+
+// Modern destructuring and spread
+const [firstFruit, secondFruit, ...others] = fruits;
+const moreFruits = [...fruits, "kiwi", "mango"];
+console.log({ firstFruit, moreFruits });`
       },
       {
         topic: 'Dictionaries / Objects',
@@ -232,8 +259,18 @@ print(person.get("age", 0))`,
     age: 30,
     city: "New York"
 };
+
+// Traditional access
 console.log(person.name);
-console.log(person.age || 0);`
+console.log(person.age || 0);
+
+// Modern destructuring with default values
+const { name, age = 0, email = "unknown" } = person;
+console.log({ name, age, email });
+
+// Object spread and merging
+const updatedPerson = { ...person, age: 31, country: "USA" };
+console.log(updatedPerson);`
       },
       {
         topic: 'Functions',
@@ -243,12 +280,16 @@ console.log(person.age || 0);`
 
 print(greet("John"))
 print(greet("Jane", "Hi"))`,
-        targetCode: `function greet(name, greeting = "Hello") {
+        targetCode: `// Traditional function
+function greet(name, greeting = "Hello") {
     return \`\${greeting}, \${name}!\`;
 }
 
+// Arrow function (shorter)
+const greetArrow = (name, greeting = "Hello") => \`\${greeting}, \${name}!\`;
+
 console.log(greet("John"));
-console.log(greet("Jane", "Hi"));`
+console.log(greetArrow("Jane", "Hi"));`
       },
       {
         topic: 'List Comprehension / Array Methods',
@@ -257,8 +298,18 @@ console.log(greet("Jane", "Hi"));`
 squared = [x**2 for x in numbers]
 evens = [x for x in numbers if x % 2 == 0]`,
         targetCode: `const numbers = [1, 2, 3, 4, 5];
+
+// Array methods (modern functional approach)
 const squared = numbers.map(x => x**2);
-const evens = numbers.filter(x => x % 2 === 0);`
+const evens = numbers.filter(x => x % 2 === 0);
+const sum = numbers.reduce((acc, x) => acc + x, 0);
+
+// Chaining methods
+const evenSquares = numbers
+  .filter(x => x % 2 === 0)
+  .map(x => x**2);
+
+console.log({ squared, evens, sum, evenSquares });`
       },
       {
         topic: 'Classes',
@@ -1285,25 +1336,48 @@ function fetchData($url) {
 }
 
 $data = fetchData("https://api.example.com/data");`,
-        targetCode: `// Promise-based
-function fetchData(url: string): Promise<string> {
-  return fetch(url).then(response => response.text());
+        targetCode: `// Modern async/await with error handling
+async function fetchData(url: string): Promise<string> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(\`HTTP error! status: \${response.status}\`);
+    }
+    return await response.text();
+  } catch (error) {
+    console.error('Fetch failed:', error);
+    throw error;
+  }
 }
 
-// Async/await
-async function fetchDataAsync(url: string): Promise<string> {
-  const response = await fetch(url);
-  return response.text();
+// Multiple async operations with Promise.all
+async function fetchMultipleUrls(urls: string[]): Promise<string[]> {
+  try {
+    const responses = await Promise.all(
+      urls.map(url => fetchData(url))
+    );
+    return responses;
+  } catch (error) {
+    console.error('One or more requests failed:', error);
+    throw error;
+  }
 }
 
 // Usage
-fetchData("https://api.example.com/data")
-  .then(data => console.log(data));
-
-// Or with async/await
 async function main() {
-  const data = await fetchDataAsync("https://api.example.com/data");
-  console.log(data);
+  try {
+    const data = await fetchData("https://api.example.com/data");
+    console.log(data);
+    
+    // Fetch multiple endpoints
+    const multiple = await fetchMultipleUrls([
+      "https://api.example.com/users",
+      "https://api.example.com/posts"
+    ]);
+    console.log(multiple);
+  } catch (error) {
+    console.error('Application error:', error);
+  }
 }`
       }
     ],
@@ -2340,20 +2414,48 @@ person = Person("John", 30)`
       {
         topic: 'Async Programming',
         description: 'Handling asynchronous operations',
-        sourceCode: `// Promises and async/await
+        sourceCode: `// Modern async/await with Promise.all
 async function fetchData(url) {
   try {
     const response = await fetch(url);
-    const data = await response.json();
-    return data;
+    if (!response.ok) {
+      throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
+    }
+    return await response.json();
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Fetch error:", error);
+    throw error;
   }
 }
 
-// Using the function
-fetchData("https://api.example.com/data")
-  .then(data => console.log(data));`,
+// Fetch multiple endpoints concurrently
+async function fetchMultiple(urls) {
+  try {
+    const results = await Promise.all(
+      urls.map(url => fetchData(url))
+    );
+    return results;
+  } catch (error) {
+    console.error("Multiple fetch error:", error);
+    throw error;
+  }
+}
+
+// Usage with proper error handling
+async function main() {
+  try {
+    const data = await fetchData("https://api.example.com/data");
+    console.log(data);
+    
+    const multiple = await fetchMultiple([
+      "https://api.example.com/users",
+      "https://api.example.com/posts"
+    ]);
+    console.log(multiple);
+  } catch (error) {
+    console.error("Application error:", error);
+  }
+}`,
         targetCode: `import asyncio
 import aiohttp
 
@@ -3638,20 +3740,50 @@ public async Task<string> FetchDataAsync(string url) {
 
 // Usage
 string data = await FetchDataAsync("https://api.example.com/data");`,
-        targetCode: `// JavaScript async/await
+        targetCode: `// Modern JavaScript async/await with enhanced error handling
 async function fetchData(url) {
     try {
         const response = await fetch(url);
-        const data = await response.text();
-        return data;
+        if (!response.ok) {
+            throw new Error(\`HTTP \${response.status}: \${response.statusText}\`);
+        }
+        return await response.text();
     } catch (error) {
-        console.error(\`Error: \${error.message}\`);
-        return null;
+        console.error(\`Error fetching \${url}:\`, error.message);
+        throw error; // Re-throw for caller to handle
     }
 }
 
-// Usage
-const data = await fetchData("https://api.example.com/data");`
+// Multiple concurrent requests (like C# Task.WhenAll)
+async function fetchMultiple(urls) {
+    try {
+        const results = await Promise.all(
+            urls.map(url => fetchData(url))
+        );
+        return results;
+    } catch (error) {
+        console.error('One or more requests failed:', error);
+        throw error;
+    }
+}
+
+// Usage with proper error handling
+async function main() {
+    try {
+        // Single request
+        const data = await fetchData("https://api.example.com/data");
+        console.log(data);
+        
+        // Multiple requests
+        const multiple = await fetchMultiple([
+            "https://api.example.com/users",
+            "https://api.example.com/posts"
+        ]);
+        console.log(multiple);
+    } catch (error) {
+        console.error('Application error:', error);
+    }
+}`
       },
       {
         topic: 'Error Handling',
