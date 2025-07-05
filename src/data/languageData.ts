@@ -11,9 +11,9 @@ export const languageData: Record<string, LanguageComparison> = {
         sourceCode: `$name = "John";
 $age = 25;
 $isActive = true;`,
-        targetCode: `let name = "John";
-let age = 25;
-let isActive = true;`
+        targetCode: `const name = "John";
+const age = 25;
+const isActive = true;`
       },
       {
         topic: 'Arrays',
@@ -21,8 +21,8 @@ let isActive = true;`
         sourceCode: `$fruits = ["apple", "banana", "orange"];
 $first = $fruits[0];
 $fruits[] = "grape"; // Add to end`,
-        targetCode: `let fruits = ["apple", "banana", "orange"];
-let first = fruits[0];
+        targetCode: `const fruits = ["apple", "banana", "orange"];
+const first = fruits[0];
 fruits.push("grape"); // Add to end`
       },
       {
@@ -34,7 +34,7 @@ fruits.push("grape"); // Add to end`
   "city" => "New York"
 ];
 echo $person["name"];`,
-        targetCode: `let person = {
+        targetCode: `const person = {
   name: "John",
   age: 30,
   city: "New York"
@@ -76,8 +76,8 @@ for (let i = 0; i < 5; i++) {
 }
 
 // For-of loop
-let colors = ["red", "green", "blue"];
-for (let color of colors) {
+const colors = ["red", "green", "blue"];
+for (const color of colors) {
   console.log(color);
 }`
       },
@@ -93,7 +93,7 @@ if ($age >= 18) {
 } else {
   echo "Child";
 }`,
-        targetCode: `let age = 18;
+        targetCode: `const age = 18;
 
 if (age >= 18) {
   console.log("Adult");
@@ -133,7 +133,7 @@ echo $person->greet();`,
   }
 }
 
-let person = new Person("John", 30);
+const person = new Person("John", 30);
 console.log(person.greet());`
       }
     ],
@@ -142,7 +142,7 @@ console.log(person.greet());`
         title: 'String Concatenation',
         description: 'PHP uses . for concatenation, JavaScript uses +',
         sourceExample: `$message = "Hello " . $name . "!";`,
-        targetExample: `let message = "Hello " + name + "!";`,
+        targetExample: `const message = "Hello " + name + "!";`,
         correctApproach: 'In JavaScript, use + for concatenation or template literals with backticks'
       },
       {
@@ -201,9 +201,9 @@ arr.includes(item);`,
         sourceCode: `name = "John"
 age = 25
 is_active = True`,
-        targetCode: `let name = "John";
-let age = 25;
-let isActive = true;`
+        targetCode: `const name = "John";
+const age = 25;
+const isActive = true;`
       },
       {
         topic: 'Lists / Arrays',
@@ -212,10 +212,10 @@ let isActive = true;`
 first = fruits[0]
 fruits.append("grape")
 length = len(fruits)`,
-        targetCode: `let fruits = ["apple", "banana", "orange"];
-let first = fruits[0];
+        targetCode: `const fruits = ["apple", "banana", "orange"];
+const first = fruits[0];
 fruits.push("grape");
-let length = fruits.length;`
+const length = fruits.length;`
       },
       {
         topic: 'Dictionaries / Objects',
@@ -227,7 +227,7 @@ let length = fruits.length;`
 }
 print(person["name"])
 print(person.get("age", 0))`,
-        targetCode: `let person = {
+        targetCode: `const person = {
     name: "John",
     age: 30,
     city: "New York"
@@ -256,9 +256,9 @@ console.log(greet("Jane", "Hi"));`
         sourceCode: `numbers = [1, 2, 3, 4, 5]
 squared = [x**2 for x in numbers]
 evens = [x for x in numbers if x % 2 == 0]`,
-        targetCode: `let numbers = [1, 2, 3, 4, 5];
-let squared = numbers.map(x => x**2);
-let evens = numbers.filter(x => x % 2 === 0);`
+        targetCode: `const numbers = [1, 2, 3, 4, 5];
+const squared = numbers.map(x => x**2);
+const evens = numbers.filter(x => x % 2 === 0);`
       },
       {
         topic: 'Classes',
@@ -284,7 +284,7 @@ print(person.greet())`,
     }
 }
 
-let person = new Person("John", 30);
+const person = new Person("John", 30);
 console.log(person.greet());`
       }
     ],
@@ -359,9 +359,9 @@ text.split(" ");`,
 int age = 25;
 boolean isActive = true;
 final double PI = 3.14159;`,
-        targetCode: `let name = "John";
-let age = 25;
-let isActive = true;
+        targetCode: `const name = "John";
+const age = 25;
+const isActive = true;
 const PI = 3.14159;`
       },
       {
@@ -378,14 +378,14 @@ String[] fruits = {"apple", "banana", "orange"};
 ArrayList<String> list = new ArrayList<>();
 list.add("item");`,
         targetCode: `// Dynamic arrays by default
-let numbers = new Array(5);
+const numbers = new Array(5);
 numbers[0] = 10;
 
 // Array with values
-let fruits = ["apple", "banana", "orange"];
+const fruits = ["apple", "banana", "orange"];
 
 // All arrays are dynamic
-let list = [];
+const list = [];
 list.push("item");`
       },
       {
@@ -449,7 +449,7 @@ Person person = new Person("John", 30);`,
     }
 }
 
-let person = new Person("John", 30);`
+const person = new Person("John", 30);`
       },
       {
         topic: 'Loops',
@@ -1110,14 +1110,14 @@ int length = value.length(); // NullPointerException!`,
 $age = 25;
 $isActive = true;
 $score = 95.5;`,
-        targetCode: `let name: string = "John";
-let age: number = 25;
-let isActive: boolean = true;
-let score: number = 95.5;
+        targetCode: `const name: string = "John";
+const age: number = 25;
+const isActive: boolean = true;
+const score: number = 95.5;
 
 // Type inference also works
-let inferredName = "John"; // string
-let inferredAge = 25; // number`
+const inferredName = "John"; // string
+const inferredAge = 25; // number`
       },
       {
         topic: 'Arrays and Objects',
@@ -1132,12 +1132,12 @@ $person = [
   "age" => 30,
   "city" => "New York"
 ];`,
-        targetCode: `let fruits: string[] = ["apple", "banana", "orange"];
-let first: string = fruits[0];
+        targetCode: `const fruits: string[] = ["apple", "banana", "orange"];
+const first: string = fruits[0];
 fruits.push("grape");
 
 // Object with type annotation
-let person: {name: string, age: number, city: string} = {
+const person: {name: string, age: number, city: string} = {
   name: "John",
   age: 30,
   city: "New York"
@@ -1150,7 +1150,7 @@ interface Person {
   city: string;
 }
 
-let typedPerson: Person = {
+const typedPerson: Person = {
   name: "John",
   age: 30,
   city: "New York"
@@ -1227,7 +1227,7 @@ class Person implements IGreetable {
   }
 }
 
-let person: Person = new Person("John", 30);`
+const person: Person = new Person("John", 30);`
       },
       {
         topic: 'Generics and Advanced Types',
@@ -1260,13 +1260,13 @@ class Container<T> {
   }
 }
 
-let stringContainer = new Container<string>("hello");
-let numberContainer = new Container<number>(42);
+const stringContainer = new Container<string>("hello");
+const numberContainer = new Container<number>(42);
 
 // Union types
 type StringOrNumber = string | number;
 let value: StringOrNumber = "hello";
-value = 42; // Both are valid
+value = 42; // Both are valid (let is correct here since value changes)
 
 // Optional properties
 interface User {
@@ -1977,10 +1977,10 @@ let user = {
   id: 1,
   email: "john@example.com"
 };`,
-        targetCode: `let name: string = "John";
-let age: number = 25;
-let isActive: boolean = true;
-let user: {id: number, email: string} = {
+        targetCode: `const name: string = "John";
+const age: number = 25;
+const isActive: boolean = true;
+const user: {id: number, email: string} = {
   id: 1,
   email: "john@example.com"
 };
@@ -1990,7 +1990,7 @@ interface User {
   id: number;
   email: string;
 }
-let typedUser: User = {
+const typedUser: User = {
   id: 1,
   email: "john@example.com"
 };`
@@ -2041,9 +2041,9 @@ let users = [
 function getFirstItem(arr) {
   return arr[0];
 }`,
-        targetCode: `let numbers: number[] = [1, 2, 3, 4, 5];
-let mixed: (number | string | boolean)[] = [1, "hello", true];
-let users: Array<{name: string, age: number}> = [
+        targetCode: `const numbers: number[] = [1, 2, 3, 4, 5];
+const mixed: (number | string | boolean)[] = [1, "hello", true];
+const users: Array<{name: string, age: number}> = [
   {name: "John", age: 30},
   {name: "Jane", age: 25}
 ];
@@ -2810,14 +2810,14 @@ print(value!) // CRASH if nil!`,
 int age = 25;
 boolean isActive = true;
 List<String> items = new ArrayList<>();`,
-        targetCode: `let name: string = "John";
-let age: number = 25;
-let isActive: boolean = true;
-let items: string[] = [];
+        targetCode: `const name: string = "John";
+const age: number = 25;
+const isActive: boolean = true;
+const items: string[] = [];
 
 // Type inference also works
-let inferredName = "John"; // string
-let inferredAge = 25; // number`
+const inferredName = "John"; // string
+const inferredAge = 25; // number`
       },
       {
         topic: 'Classes and Interfaces',
@@ -3499,14 +3499,14 @@ List<string> items = new List<string>();
 // Type inference
 var inferredName = "John";
 var inferredAge = 25;`,
-        targetCode: `let name = "John";
-let age = 25;
-let isActive = true;
-let items = [];
+        targetCode: `const name = "John";
+const age = 25;
+const isActive = true;
+const items = [];
 
 // All variables are dynamically typed
-let inferredName = "John"; // string
-let inferredAge = 25; // number`
+const inferredName = "John"; // string
+const inferredAge = 25; // number`
       },
       {
         topic: 'Classes and Objects',
@@ -3550,7 +3550,7 @@ Person person = new Person("John", 30);`,
     }
 }
 
-let person = new Person("John", 30);`
+const person = new Person("John", 30);`
       },
       {
         topic: 'Methods and Functions',
@@ -3607,18 +3607,18 @@ Dictionary<string, int> ages = new Dictionary<string, int> {
 var upperFruits = fruitsList.Select(f => f.ToUpper()).ToList();
 var adults = ages.Where(kvp => kvp.Value >= 18).ToList();`,
         targetCode: `// JavaScript Arrays
-let fruits = ["apple", "banana", "orange"];
-let fruitsList = [...fruits];
+const fruits = ["apple", "banana", "orange"];
+const fruitsList = [...fruits];
 fruitsList.push("grape");
 
-let ages = new Map([
+const ages = new Map([
     ["John", 30],
     ["Jane", 25]
 ]);
 
 // Array methods
-let upperFruits = fruitsList.map(f => f.toUpperCase());
-let adults = Array.from(ages).filter(([name, age]) => age >= 18);`
+const upperFruits = fruitsList.map(f => f.toUpperCase());
+const adults = Array.from(ages).filter(([name, age]) => age >= 18);`
       },
       {
         topic: 'Async Programming',
@@ -3693,7 +3693,7 @@ const data = await fetchData("https://api.example.com/data");`
         sourceExample: `public void GetUserData() { }
 public string UserName { get; set; }`,
         targetExample: `function getUserData() { }
-let userName = "john";`,
+const userName = "john";`,
         correctApproach: 'Use camelCase for variables and functions in JavaScript'
       },
       {
@@ -3712,10 +3712,11 @@ name = 123; // Perfectly fine`,
 if (value == null) {
     // Handle null
 }`,
-        targetExample: `let value = null;
+        targetExample: `const value = null;
 if (value === null || value === undefined) {
     // Handle both cases
 }`,
+
         correctApproach: 'Understand JavaScript has both null and undefined'
       },
       {
@@ -3724,9 +3725,9 @@ if (value === null || value === undefined) {
         sourceExample: `List<string> items = new List<string>();
 items.Add("item");
 int count = items.Count;`,
-        targetExample: `let items = [];
+        targetExample: `const items = [];
 items.push("item");
-let count = items.length;`,
+const count = items.length;`,
         correctApproach: 'JavaScript arrays are more flexible but less type-safe'
       }
     ],
@@ -3774,10 +3775,10 @@ let count = items.length;`,
 int age = 25;
 bool isActive = true;
 List<string> items = new List<string>();`,
-        targetCode: `let name: string = "John";
-let age: number = 25;
-let isActive: boolean = true;
-let items: string[] = [];`
+        targetCode: `const name: string = "John";
+const age: number = 25;
+const isActive: boolean = true;
+const items: string[] = [];`
       },
       {
         topic: 'Interfaces and Classes',
@@ -3866,7 +3867,7 @@ Repository<Person> personRepo = new Repository<Person>();`,
     }
 }
 
-let personRepo = new Repository<Person>();`
+const personRepo = new Repository<Person>();`
       }
     ],
     commonPitfalls: [
