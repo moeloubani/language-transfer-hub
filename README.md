@@ -7,7 +7,7 @@ A comprehensive web application that helps developers quickly transfer their pro
 - **Side-by-side Syntax Comparison**: See equivalent syntax between any two programming languages
 - **Common Pitfalls**: Learn about common mistakes when transitioning between languages
 - **Key Differences**: Understand fundamental differences in language design and philosophy
-- **Syntax Highlighting**: Beautiful code highlighting with Prism.js
+- **Modern UI**: Polished interface with emerald/teal color scheme and glassmorphism effects
 - **Dark Mode Support**: Built-in dark mode for comfortable viewing
 
 ## Currently Supported Language Pairs
@@ -61,5 +61,12 @@ The built files will be in the `dist` directory.
 
 - React with TypeScript
 - Tailwind CSS for styling
-- Prism.js for syntax highlighting
 - Vite for fast development and building
+
+## Author
+
+Created by **Moe Loubani**
+
+## License
+
+MIT License

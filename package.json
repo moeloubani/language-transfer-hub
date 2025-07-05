@@ -1,7 +1,10 @@
 {
   "name": "language-transfer-hub",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A comprehensive web application that helps developers quickly transfer their programming knowledge from one language to another",
+  "author": "Moe Loubani",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
