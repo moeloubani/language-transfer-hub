@@ -1808,11 +1808,28 @@ use_data(data); // ERROR: value used after move`,
 } catch (Exception $e) {
   // Handle error
 }`,
-        targetExample: `match risky_operation() {
-    Ok(result) => // Handle success,
-    Err(error) => // Handle error,
-}`,
-        correctApproach: 'Use Result<T, E> and match or ? operator for error handling'
+        targetExample: `// Pattern 1: Using match for comprehensive handling
+match risky_operation() {
+    Ok(result) => println!("Success: {}", result),
+    Err(error) => eprintln!("Error: {}", error),
+}
+
+// Pattern 2: Using ? operator for propagation
+fn process_data() -> Result<String, std::io::Error> {
+    let data = risky_operation()?; // Auto-propagates error
+    Ok(format!("Processed: {}", data))
+}
+
+// Pattern 3: Null safety with Option
+let maybe_value: Option<i32> = Some(42);
+match maybe_value {
+    Some(value) => println!("Got: {}", value),
+    None => println!("No value"),
+}
+
+// Pattern 4: Safe unwrapping with defaults
+let safe_value = maybe_value.unwrap_or(0);`,
+        correctApproach: 'Use Result<T, E> for errors and Option<T> for null safety. Prefer match or ? operator over unwrap()'
       }
     ],
     keyDifferences: [
@@ -2006,9 +2023,32 @@ let greetClosure = { (name: String) -> String in
         sourceExample: `$value = null;
 echo $value; // Works`,
         targetExample: `var value: String? = nil
-print(value) // Optional(nil)
-print(value!) // Crash if nil!`,
-        correctApproach: 'Use optional binding: if let value = value { print(value) }'
+
+// Unsafe: Force unwrapping (avoid!)
+print(value!) // Crash if nil!
+
+// Safe patterns:
+// 1. Optional binding
+if let unwrappedValue = value {
+    print(unwrappedValue)
+} else {
+    print("Value is nil")
+}
+
+// 2. Guard statement
+guard let safeValue = value else {
+    print("Value is nil, exiting")
+    return
+}
+print(safeValue)
+
+// 3. Nil coalescing
+let displayValue = value ?? "Default"
+print(displayValue)
+
+// 4. Optional chaining
+let length = value?.count // Returns Int? or nil`,
+        correctApproach: 'Always use safe unwrapping: if let, guard let, nil coalescing (??) or optional chaining (?.)'
       },
       {
         title: 'Value vs Reference Types',
@@ -3801,20 +3841,47 @@ async function main() {
 } finally {
     Console.WriteLine("Cleanup completed");
 }`,
-        targetCode: `try {
-    const content = require('fs').readFileSync('data.txt', 'utf8');
-    const number = parseInt(content);
-    console.log(number);
-} catch (error) {
-    if (error.code === 'ENOENT') {
-        console.log(\`File not found: \${error.message}\`);
-    } else if (isNaN(number)) {
-        console.log(\`Invalid format: \${error.message}\`);
-    } else {
-        console.log(\`General error: \${error.message}\`);
+        targetCode: `// Modern error handling with validation
+function readAndParseFile(filename) {
+    try {
+        const content = require('fs').readFileSync(filename, 'utf8');
+        
+        // Input validation
+        if (!content.trim()) {
+            throw new Error('File is empty');
+        }
+        
+        const number = parseInt(content.trim());
+        
+        // Validation with meaningful errors
+        if (isNaN(number)) {
+            throw new Error(\`Invalid number format: "\${content.trim()}"\`);
+        }
+        
+        return { success: true, data: number };
+    } catch (error) {
+        // Error type checking and handling
+        if (error.code === 'ENOENT') {
+            console.error(\`File not found: \${filename}\`);
+            return { success: false, error: 'FILE_NOT_FOUND' };
+        } else if (error.code === 'EACCES') {
+            console.error(\`Permission denied: \${filename}\`);
+            return { success: false, error: 'PERMISSION_DENIED' };
+        } else {
+            console.error(\`Parse error: \${error.message}\`);
+            return { success: false, error: 'PARSE_ERROR' };
+        }
+    } finally {
+        console.log("File operation completed");
     }
-} finally {
-    console.log("Cleanup completed");
+}
+
+// Usage with result pattern
+const result = readAndParseFile('data.txt');
+if (result.success) {
+    console.log(\`Number: \${result.data}\`);
+} else {
+    console.log(\`Failed: \${result.error}\`);
 }`
       }
     ],
