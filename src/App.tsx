@@ -3,12 +3,13 @@ import { LanguageSelector } from './components/LanguageSelector';
 import { CodeComparison } from './components/CodeComparison';
 import { PitfallCard } from './components/PitfallCard';
 import { KeyDifferenceCard } from './components/KeyDifferenceCard';
+import FrameworkComparison from './components/FrameworkComparison';
 import { getLanguageComparison, LANGUAGES } from './utils/languageUtils';
 
 function App() {
   const [sourceLanguage, setSourceLanguage] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('');
-  const [activeTab, setActiveTab] = useState<'syntax' | 'pitfalls' | 'differences'>('syntax');
+  const [activeTab, setActiveTab] = useState<'syntax' | 'pitfalls' | 'differences' | 'frameworks'>('syntax');
 
   const comparison = sourceLanguage && targetLanguage 
     ? getLanguageComparison(sourceLanguage, targetLanguage)
@@ -77,6 +78,16 @@ function App() {
                 >
                   Key Differences
                 </button>
+                <button
+                  onClick={() => setActiveTab('frameworks')}
+                  className={`px-6 py-3 rounded-t-xl font-medium transition-all duration-200 ${
+                    activeTab === 'frameworks'
+                      ? 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 shadow-lg border-b-2 border-emerald-500'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-gray-200'
+                  }`}
+                >
+                  Frameworks
+                </button>
               </div>
 
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
@@ -114,6 +125,17 @@ function App() {
                         targetLanguage={comparison.targetLanguage}
                       />
                     ))}
+                  </div>
+                )}
+
+                {activeTab === 'frameworks' && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Framework Comparisons</h2>
+                    <FrameworkComparison
+                      frameworks={comparison.frameworkComparisons || []}
+                      sourceLanguage={comparison.sourceLanguage}
+                      targetLanguage={comparison.targetLanguage}
+                    />
                   </div>
                 )}
               </div>
