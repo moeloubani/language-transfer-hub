@@ -361,5 +361,615 @@ text.split(" ");`,
         sourceApproach: 'Python has a comprehensive standard library ("batteries included")',
         targetApproach: 'JavaScript has a smaller standard library, relies more on npm packages'
       }
+    ],
+    frameworkComparisons: [
+      {
+        category: 'web',
+        sourceFramework: {
+          name: 'Django',
+          setupCode: `# Create virtual environment
+python -m venv myenv
+source myenv/bin/activate  # On Windows: myenv\\Scripts\\activate
+
+# Install Django
+pip install django
+
+# Create project
+django-admin startproject myproject
+cd myproject
+
+# Run development server
+python manage.py runserver`,
+          basicExample: `# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('users/', views.user_list, name='user_list'),
+]
+
+# views.py
+from django.shortcuts import render
+from .models import User
+
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'users/list.html', {'users': users})
+
+# models.py
+from django.db import models
+
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)`,
+          strengths: [
+            'Batteries included framework',
+            'Excellent ORM with migrations',
+            'Built-in admin interface',
+            'Strong security features',
+            'Great for content-heavy sites'
+          ],
+          ecosystem: ['pip', 'Django ORM', 'Django Admin', 'Django REST Framework', 'Celery']
+        },
+        targetFramework: {
+          name: 'Express.js',
+          setupCode: `# Initialize project
+npm init -y
+
+# Install Express and common middleware
+npm install express cors helmet morgan
+npm install -D nodemon @types/express
+
+# Create server file
+touch server.js
+
+# Add to package.json scripts
+"scripts": {
+  "start": "node server.js",
+  "dev": "nodemon server.js"
+}`,
+          basicExample: `// server.js
+const express = require('express');
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(cors());
+app.use(helmet());
+
+// Routes
+app.get('/users', async (req, res) => {
+    try {
+        const users = await db.user.findMany();
+        res.json({ users });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Models (using Prisma)
+// schema.prisma
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});`,
+          strengths: [
+            'Minimal and flexible',
+            'Huge ecosystem of middleware',
+            'Great performance',
+            'Easy to learn and customize',
+            'Perfect for microservices and APIs'
+          ],
+          ecosystem: ['npm', 'Passport.js', 'Prisma/Sequelize', 'Socket.io', 'PM2']
+        },
+        migrationTips: [
+          'Express requires manual setup of features Django includes by default',
+          'Choose an ORM like Prisma or Sequelize to replace Django ORM',
+          'Use passport.js for authentication instead of Django\'s built-in auth',
+          'Consider express-validator for form validation',
+          'Use EJS or Pug for server-side templates, or go full API with React/Vue'
+        ],
+        commonPitfalls: [
+          'No built-in admin interface - consider AdminJS or build custom',
+          'Manual security setup required (CORS, CSRF, etc.)',
+          'Database migrations need separate tools',
+          'More boilerplate code for common tasks',
+          'File upload handling needs multer or similar'
+        ]
+      },
+      {
+        category: 'api',
+        sourceFramework: {
+          name: 'Flask',
+          setupCode: `# Create virtual environment
+python -m venv venv
+source venv/bin/activate
+
+# Install Flask
+pip install flask flask-cors
+
+# Create app
+touch app.py`,
+          basicExample: `# app.py
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+# In-memory data store
+users = []
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    return jsonify(users)
+
+@app.route('/api/users', methods=['POST'])
+def create_user():
+    user = request.get_json()
+    users.append(user)
+    return jsonify(user), 201
+
+@app.route('/api/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    if user_id < len(users):
+        return jsonify(users[user_id])
+    return jsonify({'error': 'User not found'}), 404
+
+if __name__ == '__main__':
+    app.run(debug=True)`,
+          strengths: [
+            'Lightweight and simple',
+            'Perfect for small APIs',
+            'Easy to learn',
+            'Flexible routing',
+            'Great for prototyping'
+          ],
+          ecosystem: ['pip', 'SQLAlchemy', 'Flask-RESTful', 'Flask-Login', 'Marshmallow']
+        },
+        targetFramework: {
+          name: 'Fastify',
+          setupCode: `# Initialize project
+npm init -y
+
+# Install Fastify
+npm install fastify @fastify/cors @fastify/helmet
+
+# Install dev dependencies
+npm install -D nodemon`,
+          basicExample: `// server.js
+const fastify = require('fastify')({ logger: true });
+
+// Register plugins
+fastify.register(require('@fastify/cors'));
+fastify.register(require('@fastify/helmet'));
+
+// In-memory data store
+let users = [];
+
+// Routes
+fastify.get('/api/users', async (request, reply) => {
+    return users;
+});
+
+fastify.post('/api/users', async (request, reply) => {
+    const user = request.body;
+    users.push(user);
+    reply.code(201).send(user);
+});
+
+fastify.get('/api/users/:id', async (request, reply) => {
+    const { id } = request.params;
+    const user = users[id];
+    if (!user) {
+        reply.code(404).send({ error: 'User not found' });
+    }
+    return user;
+});
+
+// Schema validation
+const userSchema = {
+    type: 'object',
+    required: ['name', 'email'],
+    properties: {
+        name: { type: 'string' },
+        email: { type: 'string', format: 'email' }
+    }
+};
+
+fastify.post('/api/users/validated', {
+    schema: { body: userSchema }
+}, async (request, reply) => {
+    // Automatically validated
+    return request.body;
+});
+
+// Start server
+const start = async () => {
+    try {
+        await fastify.listen({ port: 3000 });
+    } catch (err) {
+        fastify.log.error(err);
+        process.exit(1);
+    }
+};
+start();`,
+          strengths: [
+            'Very high performance',
+            'Built-in schema validation',
+            'TypeScript support',
+            'Plugin architecture',
+            'Automatic serialization'
+          ],
+          ecosystem: ['npm', 'Fastify plugins', 'Prisma', 'TypeBox', 'Mercurius (GraphQL)']
+        },
+        migrationTips: [
+          'Fastify has similar minimalist philosophy to Flask',
+          'Built-in schema validation replaces Flask-Marshmallow',
+          'Plugin system is similar to Flask extensions',
+          'Async/await by default vs Flask\'s synchronous nature',
+          'JSON serialization is automatic like Flask\'s jsonify'
+        ],
+        commonPitfalls: [
+          'Different plugin registration model than Flask blueprints',
+          'Schema validation syntax takes time to learn',
+          'Async error handling needs careful attention',
+          'Less mature ecosystem than Express'
+        ]
+      },
+      {
+        category: 'testing',
+        sourceFramework: {
+          name: 'pytest',
+          setupCode: `# Install pytest
+pip install pytest pytest-cov pytest-mock
+
+# Create test file
+touch test_users.py
+
+# Run tests
+pytest
+pytest --cov=myapp  # With coverage`,
+          basicExample: `# test_users.py
+import pytest
+from app import app, db
+from models import User
+
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        with app.app_context():
+            db.create_all()
+            yield client
+            db.drop_all()
+
+def test_create_user(client):
+    response = client.post('/api/users', 
+        json={'name': 'John', 'email': 'john@example.com'})
+    assert response.status_code == 201
+    assert response.json['name'] == 'John'
+
+def test_get_users(client):
+    # Create test data
+    user = User(name='Jane', email='jane@example.com')
+    db.session.add(user)
+    db.session.commit()
+    
+    response = client.get('/api/users')
+    assert response.status_code == 200
+    assert len(response.json) == 1
+
+@pytest.mark.parametrize("name,email,expected", [
+    ("", "test@test.com", 400),
+    ("Test", "invalid-email", 400),
+    ("Test", "test@test.com", 201),
+])
+def test_user_validation(client, name, email, expected):
+    response = client.post('/api/users',
+        json={'name': name, 'email': email})
+    assert response.status_code == expected
+
+# Async test example
+@pytest.mark.asyncio
+async def test_async_operation():
+    result = await fetch_user_data()
+    assert result is not None`,
+          strengths: [
+            'Simple and pythonic syntax',
+            'Powerful fixtures system',
+            'Excellent plugin ecosystem',
+            'Parametrized testing',
+            'Great error reporting'
+          ],
+          ecosystem: ['pip', 'pytest-django', 'pytest-asyncio', 'pytest-mock', 'tox']
+        },
+        targetFramework: {
+          name: 'Jest + Supertest',
+          setupCode: `# Install testing dependencies
+npm install --save-dev jest supertest @types/jest
+
+# For API testing with Express/Fastify
+npm install --save-dev @types/supertest
+
+# Configure Jest in package.json
+"scripts": {
+  "test": "jest",
+  "test:watch": "jest --watch",
+  "test:coverage": "jest --coverage"
+}`,
+          basicExample: `// users.test.js
+const request = require('supertest');
+const app = require('./app');
+
+describe('User API', () => {
+    let server;
+    
+    beforeAll(() => {
+        server = app.listen(0); // Random port
+    });
+    
+    afterAll((done) => {
+        server.close(done);
+    });
+    
+    beforeEach(() => {
+        // Reset database or mocks
+    });
+    
+    test('POST /api/users creates a new user', async () => {
+        const userData = {
+            name: 'John',
+            email: 'john@example.com'
+        };
+        
+        const response = await request(server)
+            .post('/api/users')
+            .send(userData)
+            .expect('Content-Type', /json/)
+            .expect(201);
+            
+        expect(response.body.name).toBe('John');
+        expect(response.body).toHaveProperty('id');
+    });
+    
+    test('GET /api/users returns all users', async () => {
+        const response = await request(server)
+            .get('/api/users')
+            .expect(200);
+            
+        expect(Array.isArray(response.body)).toBe(true);
+    });
+    
+    // Parametrized tests using test.each
+    test.each([
+        ['', 'test@test.com', 400],
+        ['Test', 'invalid-email', 400],
+        ['Test', 'test@test.com', 201],
+    ])('validates user with name=%s, email=%s', async (name, email, expected) => {
+        const response = await request(server)
+            .post('/api/users')
+            .send({ name, email });
+            
+        expect(response.status).toBe(expected);
+    });
+    
+    // Mocking example
+    test('handles database errors', async () => {
+        const mockDb = require('./db');
+        mockDb.user.create = jest.fn().mockRejectedValue(new Error('DB Error'));
+        
+        const response = await request(server)
+            .post('/api/users')
+            .send({ name: 'Test', email: 'test@test.com' })
+            .expect(500);
+            
+        expect(response.body.error).toBe('Internal server error');
+    });
+});`,
+          strengths: [
+            'Fast parallel test execution',
+            'Great mocking capabilities',
+            'Snapshot testing',
+            'Watch mode for TDD',
+            'Extensive matcher library'
+          ],
+          ecosystem: ['npm', 'Supertest', 'MSW', 'Testing Library', 'Cypress']
+        },
+        migrationTips: [
+          'Jest\'s describe/test blocks are similar to pytest\'s class/function structure',
+          'Use beforeEach/afterEach instead of pytest fixtures',
+          'Supertest provides similar functionality to Flask/Django test clients',
+          'test.each() replaces @pytest.mark.parametrize',
+          'Jest mocks are more flexible but have different syntax'
+        ],
+        commonPitfalls: [
+          'Async tests require different patterns (async/await or done callback)',
+          'Database cleanup between tests needs manual handling',
+          'Mock clearing/resetting is important between tests',
+          'Configuration can be complex for different environments'
+        ]
+      },
+      {
+        category: 'fullstack',
+        sourceFramework: {
+          name: 'Django + React',
+          setupCode: `# Backend setup
+django-admin startproject backend
+cd backend
+pip install djangorestframework django-cors-headers
+
+# Frontend setup (separate directory)
+npx create-react-app frontend
+cd frontend
+npm install axios`,
+          basicExample: `# Django REST API - serializers.py
+from rest_framework import serializers
+from .models import User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'created_at']
+
+# views.py
+from rest_framework import viewsets
+from .models import User
+from .serializers import UserSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+# React Frontend - UserList.jsx
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+function UserList() {
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+    
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/users/');
+            setUsers(response.data);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    if (loading) return <div>Loading...</div>;
+    
+    return (
+        <div>
+            <h2>Users</h2>
+            <ul>
+                {users.map(user => (
+                    <li key={user.id}>{user.name} - {user.email}</li>
+                ))}
+            </ul>
+        </div>
+    );
+}`,
+          strengths: [
+            'Clear separation of concerns',
+            'Django REST Framework is powerful',
+            'Can use different deployment strategies',
+            'Best of both ecosystems',
+            'Great for teams with different expertise'
+          ],
+          ecosystem: ['pip', 'npm', 'Django REST Framework', 'React Router', 'Redux/Context API']
+        },
+        targetFramework: {
+          name: 'Next.js',
+          setupCode: `# Create Next.js app with TypeScript
+npx create-next-app@latest myapp --typescript
+cd myapp
+
+# Install additional dependencies
+npm install @prisma/client prisma
+npm install axios swr  # or use built-in fetch
+
+# Initialize Prisma
+npx prisma init`,
+          basicExample: `// Prisma schema - prisma/schema.prisma
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+// API Route - app/api/users/route.ts
+import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export async function GET() {
+  const users = await prisma.user.findMany();
+  return NextResponse.json(users);
+}
+
+export async function POST(request: Request) {
+  const data = await request.json();
+  const user = await prisma.user.create({ data });
+  return NextResponse.json(user, { status: 201 });
+}
+
+// Frontend - app/users/page.tsx
+'use client';
+
+import { useState, useEffect } from 'react';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export default function UsersPage() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    fetch('/api/users')
+      .then(res => res.json())
+      .then(data => {
+        setUsers(data);
+        setLoading(false);
+      });
+  }, []);
+  
+  if (loading) return <div>Loading...</div>;
+  
+  return (
+    <div>
+      <h2>Users</h2>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>{user.name} - {user.email}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}`,
+          strengths: [
+            'Single codebase for frontend and backend',
+            'Built-in API routes',
+            'Server-side rendering',
+            'Excellent TypeScript support',
+            'Automatic optimization and code splitting'
+          ],
+          ecosystem: ['npm', 'Prisma', 'NextAuth.js', 'tRPC', 'React Query/SWR']
+        },
+        migrationTips: [
+          'Next.js combines backend and frontend in one project',
+          'API routes are simpler but less featured than Django views',
+          'Use Prisma as an alternative to Django ORM',
+          'Server components can replace some Django template functionality',
+          'Consider NextAuth.js for authentication instead of Django auth'
+        ],
+        commonPitfalls: [
+          'No built-in admin interface like Django',
+          'Different deployment model (Vercel vs traditional hosting)',
+          'Learning curve for server components vs client components',
+          'Database migrations work differently with Prisma',
+          'CORS is handled differently in the same-origin setup'
+        ]
+      }
     ]
 };

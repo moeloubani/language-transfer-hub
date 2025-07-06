@@ -41,6 +41,13 @@ export function getLanguageComparison(source: string, target: string): LanguageC
         ...diff,
         sourceApproach: diff.targetApproach,
         targetApproach: diff.sourceApproach
+      })),
+      frameworkComparisons: reversed.frameworkComparisons?.map(fc => ({
+        ...fc,
+        sourceFramework: fc.targetFramework,
+        targetFramework: fc.sourceFramework,
+        // Note: migrationTips and commonPitfalls might need to be adjusted
+        // but for now we'll keep them as they still provide value
       }))
     };
   }
