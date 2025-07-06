@@ -109,7 +109,7 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Setup</h5>
                     <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm">{framework.sourceFramework.setupCode}</code>
+                      <code className="text-sm text-gray-800 dark:text-gray-200">{framework.sourceFramework.setupCode}</code>
                     </pre>
                   </div>
 
@@ -117,7 +117,7 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Basic Example</h5>
                     <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm">{framework.sourceFramework.basicExample}</code>
+                      <code className="text-sm text-gray-800 dark:text-gray-200">{framework.sourceFramework.basicExample}</code>
                     </pre>
                   </div>
 
@@ -143,7 +143,7 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Setup</h5>
                     <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm">{framework.targetFramework.setupCode}</code>
+                      <code className="text-sm text-gray-800 dark:text-gray-200">{framework.targetFramework.setupCode}</code>
                     </pre>
                   </div>
 
@@ -151,7 +151,7 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Basic Example</h5>
                     <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm">{framework.targetFramework.basicExample}</code>
+                      <code className="text-sm text-gray-800 dark:text-gray-200">{framework.targetFramework.basicExample}</code>
                     </pre>
                   </div>
 
