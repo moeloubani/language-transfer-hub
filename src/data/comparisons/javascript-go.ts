@@ -217,7 +217,7 @@ func getUser(c *gin.Context) {
         migrationTips: [
           'Gin has similar routing to Express but with type safety',
           'Built-in request validation replaces express-validator',
-          'Error handling is explicit with Go\\'s error returns',
+          'Error handling is explicit with Go\'s error returns',
           'Middleware concept is similar but implementation differs',
           'Static typing catches errors at compile time'
         ],
@@ -677,7 +677,7 @@ func TestUserSuite(t *testing.T) {
         },
         migrationTips: [
           'httptest package provides similar functionality to Supertest',
-          'Table-driven tests replace Jest\\'s test.each',
+          'Table-driven tests replace Jest\'s test.each',
           'assert package (testify) provides Jest-like assertions',
           'No built-in mocking, use interfaces or gomock',
           'Coverage is built into go test'
