@@ -90,21 +90,72 @@ console.log(updatedPerson);`
       {
         topic: 'Functions',
         description: 'Function definition',
-        sourceCode: `def greet(name, greeting="Hello"):
+        sourceCode: `# Regular function
+def greet(name, greeting="Hello"):
     return f"{greeting}, {name}!"
 
+# Lambda function
+square = lambda x: x ** 2
+
+# Functions as first-class objects
+def apply_twice(func, arg):
+    return func(func(arg))
+
+# Keyword arguments
+def create_user(name, age, **kwargs):
+    user = {"name": name, "age": age}
+    user.update(kwargs)
+    return user
+
+# Usage
 print(greet("John"))
-print(greet("Jane", "Hi"))`,
-        targetCode: `// Traditional function
+print(square(5))
+print(apply_twice(square, 2))  # 16
+print(create_user("Alice", 25, city="NYC", role="admin"))`,
+        targetCode: `// Traditional function declaration
 function greet(name, greeting = "Hello") {
     return \`\${greeting}, \${name}!\`;
 }
 
-// Arrow function (shorter)
+// Arrow function expression
 const greetArrow = (name, greeting = "Hello") => \`\${greeting}, \${name}!\`;
 
+// Single-expression arrow function (implicit return)
+const square = x => x ** 2;
+
+// Function expression
+const multiply = function(a, b) {
+    return a * b;
+};
+
+// Higher-order function
+const applyTwice = (func, arg) => func(func(arg));
+
+// Rest parameters (like Python's **kwargs)
+function createUser(name, age, ...extras) {
+    const user = { name, age };
+    if (extras.length > 0) {
+        const [city, role] = extras;
+        if (city) user.city = city;
+        if (role) user.role = role;
+    }
+    return user;
+}
+
+// Destructuring parameters
+const createUserDestructured = ({ name, age, city = "Unknown", role = "user" }) => ({
+    name,
+    age,
+    city,
+    role
+});
+
+// Usage
 console.log(greet("John"));
-console.log(greetArrow("Jane", "Hi"));`
+console.log(square(5));
+console.log(applyTwice(square, 2)); // 16
+console.log(createUser("Alice", 25, "NYC", "admin"));
+console.log(createUserDestructured({ name: "Bob", age: 30, role: "admin" }));`
       },
       {
         topic: 'List Comprehension / Array Methods',
@@ -152,6 +203,104 @@ print(person.greet())`,
 
 const person = new Person("John", 30);
 console.log(person.greet());`
+      },
+      {
+        topic: 'Async Programming',
+        description: 'Asynchronous operations and promises',
+        sourceCode: `import asyncio
+import aiohttp
+
+# Async function definition
+async def fetch_data(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.text()
+
+# Multiple concurrent requests
+async def fetch_multiple(urls):
+    tasks = [fetch_data(url) for url in urls]
+    results = await asyncio.gather(*tasks)
+    return results
+
+# Running async code
+async def main():
+    data = await fetch_data("https://api.example.com")
+    print(data)
+    
+    # Concurrent requests
+    urls = ["https://api1.com", "https://api2.com"]
+    results = await fetch_multiple(urls)
+    print(results)
+
+# Python 3.7+
+asyncio.run(main())`,
+        targetCode: `// Async function with async/await
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(\`HTTP error! status: \${response.status}\`);
+        }
+        return await response.text();
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+    }
+}
+
+// Multiple concurrent requests with Promise.all
+async function fetchMultiple(urls) {
+    try {
+        const promises = urls.map(url => fetchData(url));
+        const results = await Promise.all(promises);
+        return results;
+    } catch (error) {
+        console.error("Error in parallel fetch:", error);
+        throw error;
+    }
+}
+
+// Using async functions
+async function main() {
+    try {
+        // Single request
+        const data = await fetchData("https://api.example.com");
+        console.log(data);
+        
+        // Concurrent requests
+        const urls = ["https://api1.com", "https://api2.com"];
+        const results = await fetchMultiple(urls);
+        console.log(results);
+    } catch (error) {
+        console.error("Main error:", error);
+    }
+}
+
+// Run the async function
+main();
+
+// Alternative: using .then() and .catch()
+fetchData("https://api.example.com")
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
+
+// Creating and handling promises
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Async generator function
+async function* asyncGenerator() {
+    for (let i = 0; i < 3; i++) {
+        await delay(1000);
+        yield i;
+    }
+}
+
+// Using async generator
+(async () => {
+    for await (const value of asyncGenerator()) {
+        console.log(value);
+    }
+})();`
       }
     ],
     commonPitfalls: [

@@ -92,39 +92,117 @@ const person = new Person("John", 30);`
         topic: 'Methods and Functions',
         description: 'Function definition approaches',
         sourceCode: `public class MathUtils {
+    // Static method
     public static int Add(int a, int b) {
         return a + b;
     }
     
-    public static double CalculateArea(double radius) {
-        return Math.PI * radius * radius;
+    // Expression-bodied method (C# 6+)
+    public static double CalculateArea(double radius) => Math.PI * radius * radius;
+    
+    // Method overloading
+    public static string Greet(string name) {
+        return $"Hello, {name}";
     }
-}
-
-// Method overloading
-public static string Greet(string name) {
-    return $"Hello, {name}";
-}
-
-public static string Greet(string name, string greeting) {
-    return $"{greeting}, {name}";
+    
+    public static string Greet(string name, string greeting) {
+        return $"{greeting}, {name}";
+    }
+    
+    // Optional parameters
+    public static void Log(string message, LogLevel level = LogLevel.Info) {
+        Console.WriteLine($"[{level}] {message}");
+    }
+    
+    // Generic method
+    public static T Max<T>(T a, T b) where T : IComparable<T> {
+        return a.CompareTo(b) > 0 ? a : b;
+    }
+    
+    // Async method
+    public static async Task<string> FetchDataAsync(string url) {
+        using var client = new HttpClient();
+        return await client.GetStringAsync(url);
+    }
+    
+    // Lambda expression
+    public static readonly Func<int, int> Square = x => x * x;
 }`,
-        targetCode: `// Functions don't need classes
+        targetCode: `// Standalone functions (no class needed)
 function add(a, b) {
     return a + b;
 }
 
-function calculateArea(radius) {
-    return Math.PI * radius * radius;
-}
+// Arrow function (concise syntax)
+const calculateArea = (radius) => Math.PI * radius * radius;
 
-// Function overloading simulation
+// Function expression
+const multiply = function(a, b) {
+    return a * b;
+};
+
+// Single-expression arrow function (implicit return)
+const square = x => x * x;
+
+// Function overloading - use default params or rest params
 function greet(name, greeting = "Hello") {
     return \`\${greeting}, \${name}\`;
 }
 
-// Arrow functions
-const addArrow = (a, b) => a + b;`
+// Alternative: check argument count
+function greetFlexible(...args) {
+    if (args.length === 1) {
+        return \`Hello, \${args[0]}\`;
+    }
+    return \`\${args[1]}, \${args[0]}\`;
+}
+
+// Optional parameters with defaults
+function log(message, level = "INFO") {
+    console.log(\`[\${level}] \${message}\`);
+}
+
+// Generic-like behavior (JS is dynamically typed)
+function max(a, b) {
+    return a > b ? a : b;
+}
+
+// Async function
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(\`HTTP error! status: \${response.status}\`);
+        }
+        return await response.text();
+    } catch (error) {
+        console.error("Fetch error:", error);
+        throw error;
+    }
+}
+
+// Higher-order functions and closures
+const createCounter = (initial = 0) => {
+    let count = initial;
+    return {
+        increment: () => ++count,
+        decrement: () => --count,
+        getValue: () => count
+    };
+};
+
+// Function composition
+const compose = (f, g) => x => f(g(x));
+const addOne = x => x + 1;
+const double = x => x * 2;
+const addOneThenDouble = compose(double, addOne);
+
+// Usage examples
+console.log(add(5, 3)); // 8
+console.log(square(4)); // 16
+console.log(addOneThenDouble(3)); // 8
+const counter = createCounter();
+console.log(counter.increment()); // 1`
       },
       {
         topic: 'Collections and Arrays',
@@ -277,6 +355,103 @@ if (result.success) {
 } else {
     console.log(\`Failed: \${result.error}\`);
 }`
+      },
+      {
+        topic: 'Modern Language Features',
+        description: 'Destructuring, spread, and modern patterns',
+        sourceCode: `// C# Tuples and Deconstruction
+var (name, age) = GetPerson();
+(string firstName, string lastName) = GetFullName();
+
+// Pattern matching (C# 8+)
+string GetDescription(object obj) => obj switch {
+    int n when n > 0 => "Positive number",
+    string s => $"String: {s}",
+    null => "Null value",
+    _ => "Unknown"
+};
+
+// Record types (C# 9+)
+public record Person(string Name, int Age);
+var person = new Person("John", 30);
+var updatedPerson = person with { Age = 31 };
+
+// Collection expressions (C# 12+)
+int[] numbers = [1, 2, 3, 4, 5];
+int[] moreNumbers = [..numbers, 6, 7, 8];
+
+// Object initializers
+var user = new User {
+    Name = "John",
+    Age = 30,
+    Tags = new List<string> { "admin", "user" }
+};
+
+// LINQ for data transformation
+var adults = people
+    .Where(p => p.Age >= 18)
+    .Select(p => new { p.Name, p.Age })
+    .OrderBy(p => p.Name);`,
+        targetCode: `// Array and Object Destructuring
+const [name, age] = getPerson();
+const [firstName, lastName] = getFullName();
+
+// Object destructuring with renaming
+const { name: userName, age: userAge } = user;
+
+// Nested destructuring
+const { address: { city, street } } = person;
+
+// Default values in destructuring
+const { theme = 'light', lang = 'en' } = settings;
+
+// Pattern-like behavior with conditionals
+const getDescription = (obj) => {
+    if (typeof obj === 'number' && obj > 0) return "Positive number";
+    if (typeof obj === 'string') return \`String: \${obj}\`;
+    if (obj === null) return "Null value";
+    return "Unknown";
+};
+
+// Object spread for immutable updates
+const person = { name: "John", age: 30 };
+const updatedPerson = { ...person, age: 31 };
+
+// Array spread
+const numbers = [1, 2, 3, 4, 5];
+const moreNumbers = [...numbers, 6, 7, 8];
+
+// Rest parameters in destructuring
+const { name, ...otherProps } = person;
+const [first, ...rest] = numbers;
+
+// Object property shorthand
+const createUser = (name, age) => ({ name, age });
+
+// Array methods for data transformation
+const adults = people
+    .filter(p => p.age >= 18)
+    .map(p => ({ name: p.name, age: p.age }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+// Optional chaining and nullish coalescing
+const city = person?.address?.city ?? 'Unknown';
+const port = config.port ?? 3000;
+
+// Dynamic property names
+const prop = 'status';
+const obj = {
+    [prop]: 'active',
+    [\`is\${prop.charAt(0).toUpperCase() + prop.slice(1)}\`]: true
+};
+
+// Template literal tags
+const sql = (strings, ...values) => {
+    // SQL template tag implementation
+    return { query: strings.join('?'), values };
+};
+
+const query = sql\`SELECT * FROM users WHERE id = \${userId}\`;`
       }
     ],
     commonPitfalls: [
