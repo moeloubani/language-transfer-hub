@@ -35,6 +35,9 @@ import { csharpRubyComparison } from './comparisons/csharp-ruby';
 import { csharpGoComparison } from './comparisons/csharp-go';
 import { csharpRustComparison } from './comparisons/csharp-rust';
 import { csharpSwiftComparison } from './comparisons/csharp-swift';
+import { pythonJavaComparison } from './comparisons/python-java';
+import { pythonPhpComparison } from './comparisons/python-php';
+import { pythonCsharpComparison } from './comparisons/python-csharp';
 
 export const languageData: Record<string, LanguageComparison> = {
   'php-javascript': phpJavascriptComparison,
@@ -72,4 +75,7 @@ export const languageData: Record<string, LanguageComparison> = {
   'csharp-go': csharpGoComparison,
   'csharp-rust': csharpRustComparison,
   'csharp-swift': csharpSwiftComparison,
+  'python-java': pythonJavaComparison,
+  'python-php': pythonPhpComparison,
+  'python-csharp': pythonCsharpComparison,
 };
