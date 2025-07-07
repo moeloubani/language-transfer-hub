@@ -38,6 +38,11 @@ import { csharpSwiftComparison } from './comparisons/csharp-swift';
 import { pythonJavaComparison } from './comparisons/python-java';
 import { pythonPhpComparison } from './comparisons/python-php';
 import { pythonCsharpComparison } from './comparisons/python-csharp';
+import { pythonGoComparison } from './comparisons/python-go';
+import { pythonRubyComparison } from './comparisons/python-ruby';
+import { pythonTypescriptComparison } from './comparisons/python-typescript';
+import { pythonRustComparison } from './comparisons/python-rust';
+import { pythonSwiftComparison } from './comparisons/python-swift';
 
 export const languageData: Record<string, LanguageComparison> = {
   'php-javascript': phpJavascriptComparison,
@@ -78,4 +83,9 @@ export const languageData: Record<string, LanguageComparison> = {
   'python-java': pythonJavaComparison,
   'python-php': pythonPhpComparison,
   'python-csharp': pythonCsharpComparison,
+  'python-go': pythonGoComparison,
+  'python-ruby': pythonRubyComparison,
+  'python-typescript': pythonTypescriptComparison,
+  'python-rust': pythonRustComparison,
+  'python-swift': pythonSwiftComparison,
 };
