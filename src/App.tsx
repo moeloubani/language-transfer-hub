@@ -46,7 +46,7 @@ function App() {
 
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <LanguageSelector
                 label="I know..."
                 value={sourceLanguage}
