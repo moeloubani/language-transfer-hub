@@ -604,7 +604,7 @@ owned.push_str(" World");`,
         description: 'Rust requires explicit lifetimes in some cases',
         sourceExample: `def get_first(items):
     return items[0] if items else None`,
-        targetExample: `fn get_first<\'a>(items: &\'a [i32]) -> Option<&\'a i32> {
+        targetExample: `fn get_first<'a>(items: &'a [i32]) -> Option<&'a i32> {
     items.first()
 }`,
         correctApproach: 'Learn lifetime elision rules and when to annotate'
@@ -642,7 +642,7 @@ large_data = [i for i in range(1000000)]`,
           name: 'Django',
           setupCode: `# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+ source venv/bin/activate  # or venv\\Scripts\\activate on Windows
 
 # Install Django
 pip install django djangorestframework

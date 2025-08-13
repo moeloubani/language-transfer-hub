@@ -184,7 +184,7 @@ const betterMessage = \`Hello \${name}!\`;
 
 // With optional chaining for nested properties
 const greeting = \`Hello \${user?.profile?.name ?? 'Guest'}!\`;`,
-        correctApproach: 'Use template literals (\`\`) for cleaner string interpolation and optional chaining (?.) for safe property access'
+        correctApproach: 'Use template literals (``) for cleaner string interpolation and optional chaining (?.) for safe property access'
       },
       {
         title: 'Variable Scope',

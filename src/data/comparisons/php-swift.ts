@@ -36,12 +36,12 @@ let person = ["name": "John", "age": 30]`
   return "$greeting, $name!";
 }`,
         targetCode: `func greet(name: String, greeting: String = "Hello") -> String {
-    return "\(greeting), \(name)!"
+        return "\\(greeting), \\(name)!"
 }
 
 // Closure
 let greetClosure = { (name: String) -> String in
-    return "Hello, \(name)!"
+    return "Hello, \\(name)!"
 }`
       },
       {
@@ -66,7 +66,7 @@ let greetClosure = { (name: String) -> String in
     }
     
     func greet() -> String {
-        return "Hi, I'm \(name)"
+        return "Hi, I'm \\(name)"
     }
 }`
       }

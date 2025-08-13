@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LanguageSelector } from './components/LanguageSelector';
 import { CodeComparison } from './components/CodeComparison';
 import { PitfallCard } from './components/PitfallCard';
@@ -7,9 +7,26 @@ import FrameworkComparison from './components/FrameworkComparison';
 import { getLanguageComparison, LANGUAGES } from './utils/languageUtils';
 
 function App() {
-  const [sourceLanguage, setSourceLanguage] = useState('');
-  const [targetLanguage, setTargetLanguage] = useState('');
-  const [activeTab, setActiveTab] = useState<'syntax' | 'pitfalls' | 'differences' | 'frameworks'>('syntax');
+  const [sourceLanguage, setSourceLanguage] = useState(() => localStorage.getItem('sourceLanguage') || '');
+  const [targetLanguage, setTargetLanguage] = useState(() => localStorage.getItem('targetLanguage') || '');
+  const [activeTab, setActiveTab] = useState<'syntax' | 'pitfalls' | 'differences' | 'frameworks'>(() => {
+    const stored = localStorage.getItem('activeTab');
+    if (stored === 'syntax' || stored === 'pitfalls' || stored === 'differences' || stored === 'frameworks') {
+      return stored;
+    }
+    return 'syntax';
+  });
+
+  // Persist selections
+  useEffect(() => {
+    localStorage.setItem('sourceLanguage', sourceLanguage);
+  }, [sourceLanguage]);
+  useEffect(() => {
+    localStorage.setItem('targetLanguage', targetLanguage);
+  }, [targetLanguage]);
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
 
   const comparison = sourceLanguage && targetLanguage 
     ? getLanguageComparison(sourceLanguage, targetLanguage)
@@ -29,12 +46,18 @@ function App() {
 
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
               <LanguageSelector
                 label="I know..."
                 value={sourceLanguage}
                 onChange={setSourceLanguage}
                 excludeLanguage={targetLanguage}
+                onSwap={() => {
+                  if (targetLanguage) {
+                    setSourceLanguage(targetLanguage);
+                    setTargetLanguage(sourceLanguage);
+                  }
+                }}
               />
               <LanguageSelector
                 label="Teach me..."
@@ -47,7 +70,7 @@ function App() {
 
           {comparison ? (
             <>
-              <div className="flex space-x-1 mb-6">
+              <div className="flex space-x-1 mb-6 sticky top-14 z-40 bg-transparent">
                 <button
                   onClick={() => setActiveTab('syntax')}
                   className={`px-6 py-3 rounded-t-xl font-medium transition-all duration-200 ${

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { FrameworkComparison } from '../types/language';
+import HighlightedCode from './HighlightedCode';
 
 interface Props {
   frameworks: FrameworkComparison[];
@@ -9,6 +10,7 @@ interface Props {
 
 export default function FrameworkComparisonComponent({ frameworks, sourceLanguage, targetLanguage }: Props) {
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
+  const [query, setQuery] = React.useState<string>('');
 
   const categories = React.useMemo(() => {
     const cats = new Set(['all']);
@@ -17,9 +19,16 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
   }, [frameworks]);
 
   const filteredFrameworks = React.useMemo(() => {
-    if (selectedCategory === 'all') return frameworks;
-    return frameworks.filter(fw => fw.category === selectedCategory);
-  }, [frameworks, selectedCategory]);
+    const byCategory = selectedCategory === 'all' ? frameworks : frameworks.filter(fw => fw.category === selectedCategory);
+    if (!query.trim()) return byCategory;
+    const q = query.toLowerCase();
+    return byCategory.filter(fw =>
+      fw.sourceFramework.name.toLowerCase().includes(q) ||
+      fw.targetFramework.name.toLowerCase().includes(q) ||
+      fw.migrationTips.some(t => t.toLowerCase().includes(q)) ||
+      fw.commonPitfalls.some(t => t.toLowerCase().includes(q))
+    );
+  }, [frameworks, selectedCategory, query]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -50,8 +59,8 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
 
   return (
     <div className="space-y-6">
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2">
+      {/* Filters */}
+      <div className="flex flex-wrap gap-2 items-center">
         {categories.map(category => (
           <button
             key={category}
@@ -70,6 +79,14 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
             )}
           </button>
         ))}
+        <div className="ml-auto">
+          <input
+            placeholder="Search frameworks..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm shadow-sm dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+          />
+        </div>
       </div>
 
       {/* Framework Comparisons */}
@@ -108,17 +125,13 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
                   {/* Setup */}
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Setup</h5>
-                    <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm text-gray-800 dark:text-white">{framework.sourceFramework.setupCode}</code>
-                    </pre>
+                    <HighlightedCode code={framework.sourceFramework.setupCode} language="bash" />
                   </div>
 
                   {/* Basic Example */}
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Basic Example</h5>
-                    <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm text-gray-800 dark:text-white">{framework.sourceFramework.basicExample}</code>
-                    </pre>
+                    <HighlightedCode code={framework.sourceFramework.basicExample} language="javascript" />
                   </div>
 
                   {/* Strengths */}
@@ -142,17 +155,13 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
                   {/* Setup */}
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Setup</h5>
-                    <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm text-gray-800 dark:text-white">{framework.targetFramework.setupCode}</code>
-                    </pre>
+                    <HighlightedCode code={framework.targetFramework.setupCode} language="bash" />
                   </div>
 
                   {/* Basic Example */}
                   <div>
                     <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Basic Example</h5>
-                    <pre className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg overflow-x-auto">
-                      <code className="text-sm text-gray-800 dark:text-white">{framework.targetFramework.basicExample}</code>
-                    </pre>
+                    <HighlightedCode code={framework.targetFramework.basicExample} language="javascript" />
                   </div>
 
                   {/* Strengths */}

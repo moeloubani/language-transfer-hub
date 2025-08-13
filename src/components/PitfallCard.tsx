@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Pitfall } from '../types/language';
+import HighlightedCode from './HighlightedCode';
 
 interface PitfallCardProps {
   pitfall: Pitfall;
@@ -22,11 +23,7 @@ export const PitfallCard: React.FC<PitfallCardProps> = ({ pitfall }) => {
                 <span className="inline-block w-3 h-3 bg-red-500 rounded-full mr-2"></span>
                 Source (Problematic):
               </h4>
-              <pre className="bg-gray-900 text-red-400 rounded-lg p-4 overflow-x-auto text-sm border border-gray-700 shadow-lg">
-                <code>
-                  {pitfall.sourceExample}
-                </code>
-              </pre>
+              <HighlightedCode code={pitfall.sourceExample} language="javascript" colorClass="text-red-300" />
             </div>
           )}
           {pitfall.targetExample && (
@@ -35,11 +32,7 @@ export const PitfallCard: React.FC<PitfallCardProps> = ({ pitfall }) => {
                 <span className="inline-block w-3 h-3 bg-emerald-500 rounded-full mr-2"></span>
                 Target (Better):
               </h4>
-              <pre className="bg-gray-900 text-emerald-400 rounded-lg p-4 overflow-x-auto text-sm border border-gray-700 shadow-lg">
-                <code>
-                  {pitfall.targetExample}
-                </code>
-              </pre>
+              <HighlightedCode code={pitfall.targetExample} language="javascript" colorClass="text-emerald-300" />
             </div>
           )}
         </div>

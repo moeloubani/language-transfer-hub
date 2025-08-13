@@ -6,13 +6,15 @@ interface LanguageSelectorProps {
   value: string;
   onChange: (value: string) => void;
   excludeLanguage?: string;
+  onSwap?: () => void;
 }
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   label,
   value,
   onChange,
-  excludeLanguage
+  excludeLanguage,
+  onSwap
 }) => {
   const availableLanguages = Object.entries(LANGUAGES).filter(
     ([key]) => key !== excludeLanguage
@@ -35,6 +37,15 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           </option>
         ))}
       </select>
+      {onSwap && (
+        <button
+          type="button"
+          onClick={onSwap}
+          className="self-start text-sm text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
+        >
+          Swap with other
+        </button>
+      )}
     </div>
   );
 };

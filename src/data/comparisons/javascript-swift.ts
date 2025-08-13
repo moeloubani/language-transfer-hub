@@ -16,7 +16,7 @@ var email: String? = nil
 
 // Optional binding
 if let email = email {
-    print("Email: \(email)")
+    print("Email: \\(email)")
 }`
       }
     ],
@@ -776,7 +776,7 @@ class PerformanceTests: XCTestCase {
     func testUserCreationPerformance() {
         measure {
             for i in 0..<1000 {
-                _ = User(name: "User \(i)", email: "user\(i)@example.com")
+                _ = User(name: "User \\(i)", email: "user\\(i)@example.com")
             }
         }
     }
@@ -993,7 +993,7 @@ class APIService: ObservableObject {
     private let baseURL = "http://localhost:8080/api"
     
     func fetchUsers() async throws -> [User] {
-        guard let url = URL(string: "\(baseURL)/users") else {
+        guard let url = URL(string: "\\(baseURL)/users") else {
             throw URLError(.badURL)
         }
         
@@ -1002,7 +1002,7 @@ class APIService: ObservableObject {
     }
     
     func createUser(_ user: User) async throws -> User {
-        guard let url = URL(string: "\(baseURL)/users") else {
+        guard let url = URL(string: "\\(baseURL)/users") else {
             throw URLError(.badURL)
         }
         
@@ -1081,7 +1081,7 @@ struct ContentView: View {
             users = try await api.fetchUsers()
             errorMessage = ""
         } catch {
-            errorMessage = "Failed to load users: \(error.localizedDescription)"
+            errorMessage = "Failed to load users: \\(error.localizedDescription)"
         }
     }
     
@@ -1099,7 +1099,7 @@ struct ContentView: View {
                 
                 await loadUsers()
             } catch {
-                errorMessage = "Failed to add user: \(error.localizedDescription)"
+                errorMessage = "Failed to add user: \\(error.localizedDescription)"
             }
         }
     }
