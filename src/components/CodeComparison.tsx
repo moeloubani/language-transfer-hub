@@ -29,7 +29,7 @@ export const CodeComparison: React.FC<CodeComparisonProps> = ({
     ruby: 'ruby',
     go: 'go',
     rust: 'rust',
-    csharp: 'javascript', // closest approximation for display
+    csharp: 'csharp',
     swift: 'swift',
   };
 

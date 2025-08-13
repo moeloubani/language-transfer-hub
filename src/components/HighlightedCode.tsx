@@ -1,5 +1,7 @@
 import React from 'react';
 import Prism from 'prismjs';
+import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-markup-templating';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-python';
@@ -9,6 +11,9 @@ import 'prismjs/components/prism-ruby';
 import 'prismjs/components/prism-go';
 import 'prismjs/components/prism-rust';
 import 'prismjs/components/prism-swift';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-csharp';
 import 'prismjs/themes/prism-tomorrow.css';
 
 interface Props {
