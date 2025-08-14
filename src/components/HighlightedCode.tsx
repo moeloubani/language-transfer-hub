@@ -14,7 +14,7 @@ import 'prismjs/components/prism-swift';
 import 'prismjs/components/prism-bash';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-csharp';
-import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/themes/prism.css';
 
 interface Props {
   code: string;
@@ -32,7 +32,7 @@ export const HighlightedCode: React.FC<Props> = ({ code, language, colorClass })
   }, [code, language]);
 
   return (
-    <pre className="bg-gray-900 rounded-lg p-4 overflow-x-auto text-sm border border-gray-700 shadow-lg">
+    <pre className="bg-gray-50 rounded-lg p-4 overflow-x-auto text-sm border border-gray-200 shadow-sm">
       <code ref={ref} className={`language-${language} ${colorClass || ''}`}>
         {code}
       </code>

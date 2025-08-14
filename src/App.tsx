@@ -5,6 +5,7 @@ import { PitfallCard } from './components/PitfallCard';
 import { KeyDifferenceCard } from './components/KeyDifferenceCard';
 import FrameworkComparison from './components/FrameworkComparison';
 import { getLanguageComparison, LANGUAGES } from './utils/languageUtils';
+import SocialShare from './components/SocialShare';
 
 function App() {
   const [sourceLanguage, setSourceLanguage] = useState(() => localStorage.getItem('sourceLanguage') || '');
@@ -17,6 +18,20 @@ function App() {
     return 'syntax';
   });
 
+  // Initialize from URL params (for shared links)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlSource = params.get('source') || '';
+    const urlTarget = params.get('target') || '';
+    const urlTab = params.get('tab') as 'syntax' | 'pitfalls' | 'differences' | 'frameworks' | null;
+    if (urlSource) setSourceLanguage(urlSource);
+    if (urlTarget) setTargetLanguage(urlTarget);
+    if (urlTab && ['syntax', 'pitfalls', 'differences', 'frameworks'].includes(urlTab)) {
+      setActiveTab(urlTab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Persist selections
   useEffect(() => {
     localStorage.setItem('sourceLanguage', sourceLanguage);
@@ -28,24 +43,35 @@ function App() {
     localStorage.setItem('activeTab', activeTab);
   }, [activeTab]);
 
+  // Keep URL in sync (clean shareable links)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (sourceLanguage) params.set('source', sourceLanguage); else params.delete('source');
+    if (targetLanguage) params.set('target', targetLanguage); else params.delete('target');
+    if (activeTab) params.set('tab', activeTab); else params.delete('tab');
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, '', newUrl);
+  }, [sourceLanguage, targetLanguage, activeTab]);
+
   const comparison = sourceLanguage && targetLanguage 
     ? getLanguageComparison(sourceLanguage, targetLanguage)
     : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-gray-900 dark:to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-10">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-4">
-            Language Transfer Hub
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Transfer your programming knowledge from one language to another
-          </p>
+        <header className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-semibold text-gray-900">Language Transfer Hub</h1>
+              <p className="text-sm text-gray-600">Transfer your programming knowledge from one language to another</p>
+            </div>
+            <SocialShare sourceLanguage={sourceLanguage} targetLanguage={targetLanguage} activeTab={activeTab} />
+          </div>
         </header>
 
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 mb-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
               <LanguageSelector
                 label="I know..."
@@ -70,53 +96,53 @@ function App() {
 
           {comparison ? (
             <>
-              <div className="flex space-x-1 mb-6 sticky top-14 z-40 bg-transparent">
+              <div className="flex space-x-1 mb-6">
                 <button
                   onClick={() => setActiveTab('syntax')}
-                  className={`px-6 py-3 rounded-t-xl font-medium transition-all duration-200 ${
+                  className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 border ${
                     activeTab === 'syntax'
-                      ? 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 shadow-lg border-b-2 border-emerald-500'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-gray-200'
+                      ? 'bg-white text-emerald-700 border-emerald-200 shadow-sm'
+                      : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
                   }`}
                 >
                   Syntax Comparison
                 </button>
                 <button
                   onClick={() => setActiveTab('pitfalls')}
-                  className={`px-6 py-3 rounded-t-xl font-medium transition-all duration-200 ${
+                  className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 border ${
                     activeTab === 'pitfalls'
-                      ? 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 shadow-lg border-b-2 border-emerald-500'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-gray-200'
+                      ? 'bg-white text-emerald-700 border-emerald-200 shadow-sm'
+                      : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
                   }`}
                 >
                   Common Pitfalls
                 </button>
                 <button
                   onClick={() => setActiveTab('differences')}
-                  className={`px-6 py-3 rounded-t-xl font-medium transition-all duration-200 ${
+                  className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 border ${
                     activeTab === 'differences'
-                      ? 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 shadow-lg border-b-2 border-emerald-500'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-gray-200'
+                      ? 'bg-white text-emerald-700 border-emerald-200 shadow-sm'
+                      : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
                   }`}
                 >
                   Key Differences
                 </button>
                 <button
                   onClick={() => setActiveTab('frameworks')}
-                  className={`px-6 py-3 rounded-t-xl font-medium transition-all duration-200 ${
+                  className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 border ${
                     activeTab === 'frameworks'
-                      ? 'bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 shadow-lg border-b-2 border-emerald-500'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-gray-200'
+                      ? 'bg-white text-emerald-700 border-emerald-200 shadow-sm'
+                      : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
                   }`}
                 >
                   Frameworks
                 </button>
               </div>
 
-              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
                 {activeTab === 'syntax' && (
                   <div>
-                    <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Syntax Comparison</h2>
+                    <h2 className="text-2xl font-semibold mb-6 text-gray-900">Syntax Comparison</h2>
                     {comparison.syntaxExamples.map((example, index) => (
                       <CodeComparison
                         key={index}
@@ -130,7 +156,7 @@ function App() {
 
                 {activeTab === 'pitfalls' && (
                   <div>
-                    <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Common Pitfalls</h2>
+                    <h2 className="text-2xl font-semibold mb-6 text-gray-900">Common Pitfalls</h2>
                     {comparison.commonPitfalls.map((pitfall, index) => (
                       <PitfallCard key={index} pitfall={pitfall} />
                     ))}
@@ -139,7 +165,7 @@ function App() {
 
                 {activeTab === 'differences' && (
                   <div>
-                    <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Key Differences</h2>
+                    <h2 className="text-2xl font-semibold mb-6 text-gray-900">Key Differences</h2>
                     {comparison.keyDifferences.map((difference, index) => (
                       <KeyDifferenceCard
                         key={index}
@@ -153,7 +179,7 @@ function App() {
 
                 {activeTab === 'frameworks' && (
                   <div>
-                    <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Framework Comparisons</h2>
+                    <h2 className="text-2xl font-semibold mb-6 text-gray-900">Framework Comparisons</h2>
                     <FrameworkComparison
                       frameworks={comparison.frameworkComparisons || []}
                       sourceLanguage={comparison.sourceLanguage}
@@ -165,11 +191,11 @@ function App() {
             </>
           ) : (
             sourceLanguage && targetLanguage && (
-              <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
-                <p className="text-gray-600 dark:text-gray-400">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+                <p className="text-gray-700">
                   Sorry, we don't have a comparison for {LANGUAGES[sourceLanguage as keyof typeof LANGUAGES]} to {LANGUAGES[targetLanguage as keyof typeof LANGUAGES]} yet.
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                <p className="text-sm text-gray-500 mt-2">
                   Try PHP to JavaScript, Python to JavaScript, or Java to JavaScript.
                 </p>
               </div>

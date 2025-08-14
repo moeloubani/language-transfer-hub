@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 import type { LanguageComparison } from '../../types/language';
 
 export const javaJavascriptComparison: LanguageComparison = {
@@ -918,10 +917,7 @@ class UserControllerIntegrationTest {
     
     @Test
     void testCreateUserEndpoint() throws Exception {
-        String userJson = "{" +
-                "\\\"name\\\":\\\"John\\\"," +
-                "\\\"email\\\":\\\"john@example.com\\\"" +
-                "}";
+        String userJson = "{\"name\":\"John\",\"email\":\"john@example.com\"}";
         
         mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)

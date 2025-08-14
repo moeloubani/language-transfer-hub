@@ -22,13 +22,13 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 
   return (
     <div className="flex flex-col space-y-2">
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <label className="text-sm font-medium text-gray-700">
         {label}
       </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white transition-colors duration-200 shadow-sm"
+        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white text-gray-900 transition-colors duration-200 shadow-sm"
       >
         <option value="">Select a language</option>
         {availableLanguages.map(([key, name]) => (
@@ -41,7 +41,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         <button
           type="button"
           onClick={onSwap}
-          className="self-start text-sm text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
+          className="self-start text-sm text-emerald-700 hover:text-emerald-800"
         >
           Swap with other
         </button>
