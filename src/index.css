@@ -2,7 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth background transition for theme changes */
-.dark body, body {
-  transition: background-color 0.2s ease, color 0.2s ease;
-}

@@ -136,7 +136,7 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
 
                   {/* Strengths */}
                   <div>
-                    <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Strengths</h5>
+                    <h5 className="text-sm font-medium text-gray-600 mb-2">Strengths</h5>
                     <ul className="list-disc list-inside space-y-1">
                       {framework.sourceFramework.strengths.map((strength, i) => (
                         <li key={i} className="text-sm text-gray-700">{strength}</li>
@@ -166,7 +166,7 @@ export default function FrameworkComparisonComponent({ frameworks, sourceLanguag
 
                   {/* Strengths */}
                   <div>
-                    <h5 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Strengths</h5>
+                    <h5 className="text-sm font-medium text-gray-600 mb-2">Strengths</h5>
                     <ul className="list-disc list-inside space-y-1">
                       {framework.targetFramework.strengths.map((strength, i) => (
                         <li key={i} className="text-sm text-gray-700">{strength}</li>
